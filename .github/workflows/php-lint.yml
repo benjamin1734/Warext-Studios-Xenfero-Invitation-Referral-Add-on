@@ -75,8 +75,17 @@ jobs:
               parsed[path] = ET.parse(path)
               print(path)
 
-          if addon['version_id'] < 1010000 or addon['version_string'] != '1.1.0':
-              raise SystemExit('1.1.0 sürüm bilgisi beklenen değerde değil')
+          import re
+          version = str(addon.get('version_string', ''))
+          match = re.fullmatch(r'(\\d+)\\.(\\d+)\\.(\\d+)', version)
+          if not match:
+              raise SystemExit('Geçersiz SemVer sürümü: ' + version)
+          major, minor, patch = map(int, match.groups())
+          expected_id = major * 1000000 + minor * 10000 + patch * 10
+          if addon.get('version_id') != expected_id:
+              raise SystemExit(f'Sürüm ID uyumsuzluğu: {addon.get("version_id")} != {expected_id}')
+          if int(addon.get('require', {}).get('XF', [0])[0]) > 2030130:
+              raise SystemExit('XenForo 2.3.13 sürüm gereksinimini karşılamıyor')
 
           limit_checks = [
               ('cron.xml', './/entry', ['entry_id']),

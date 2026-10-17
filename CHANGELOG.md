@@ -1,3 +1,8 @@
+## 1.2.1 - 2026-10-17
+
+- Fixed stale version-specific validation in GitHub Actions; version ID is now checked against SemVer automatically.
+- Added static XenForo 2.3.13 version-floor check. Live XenForo compatibility still requires an integration test.
+
 ## 1.2.0 - 2026-09-26
 
 - Added native Turkish/English XenForo language support.
